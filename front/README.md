@@ -1,3 +1,24 @@
+# front
 
-# References
-- [Building a code editor with Monaco](https://blog.expo.io/building-a-code-editor-with-monaco-f84b3a06deaf)
+## setup
+
+```
+yarn
+```
+
+## build
+
+```
+yarn build
+```
+
+## test with using python
+
+```
+cd dist
+python3 -m http.server
+```
+
+## References
+
+- [microsoft/monaco-editor-webpack-plugin](https://github.com/microsoft/monaco-editor-webpack-plugin)

@@ -1,6 +1,7 @@
-import monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
 
-monaco.editor.create(document.getElementById("container")!, {
+const container = document.getElementById("container")!
+monaco.editor.create(container, {
   value: "print('nya')",
   language: 'python',
 })
