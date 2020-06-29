@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
-  entry: './src/main.ts',
+  entry: './src/main.tsx',
   output: {
     globalObject: 'self',
     path: path.resolve(__dirname, 'dist'),
@@ -25,6 +25,9 @@ module.exports = {
         use: ['file-loader']
       }
     ]
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ],
   },
   mode: 'development',
   plugins: [

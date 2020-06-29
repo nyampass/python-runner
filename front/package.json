@@ -8,9 +8,14 @@
     "dev": "yarn build --watch"
   },
   "dependencies": {
-    "monaco-editor": "^0.20.0"
+    "monaco-editor": "^0.20.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-monaco-editor": "^0.36.0"
   },
   "devDependencies": {
+    "@types/react": "^16.9.41",
+    "@types/react-dom": "^16.9.8",
     "css-loader": "^3.6.0",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
