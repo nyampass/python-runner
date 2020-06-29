@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  node: &node
+    image: node:14-alpine
+  front:
+    <<: *node
+    working_dir: /app
+    volumes:
+      - ./front:/app
+    command: yarn dev
+  server:
+    <<: *node
+    working_dir: /server
+    volumes:
+      - ./server:/server
+      - ./front:/front
+    command: yarn dev
+    ports:
+      - 4000:4000
