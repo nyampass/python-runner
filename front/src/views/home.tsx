@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import MonacoEdotor from 'react-monaco-editor'
+import { Button, Grid } from '@material-ui/core'
 import api from '../api'
 
 export default () => {
@@ -22,8 +23,8 @@ export default () => {
   })
 
   return (
-    <div className="Home" style={{ width: '100vw', height: '70vh' }}>
-      <div style={{ width: '100%', height: '100%', flexFlow: 'row', display: 'flex', flexGrow: 1 }}>
+    <div className="Home" style={{ width: '100vw', height: '100vh' }}>
+      <div style={{ width: '100%', height: '70%', flexFlow: 'row', display: 'flex' }}>
         <MonacoEdotor
           width='50%'
           height='100%'
@@ -43,14 +44,9 @@ export default () => {
           }}
         />
       </div>
-      <div style={{ flexFlow: 'row-reverse', display: 'flex', height: '30vh' }}>
-        <div
-          style={{ margin: 5, padding: 15, backgroundColor: 'lightblue', borderRadius: 5 }}
-          onClick={() => playProgram()}
-        >
-          Play
-        </div>
-      </div>
+      <Grid container direction="row-reverse" style={{ padding: 10 }}>
+        <Button variant="contained" color="primary" onChange={() => playProgram()}>play</Button>
+      </Grid>
     </div>
   );
 }
