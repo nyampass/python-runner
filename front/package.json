@@ -15,11 +15,13 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-monaco-editor": "^0.36.0",
-    "reset-css": "^5.0.1"
+    "reset-css": "^5.0.1",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.41",
     "@types/react-dom": "^16.9.8",
+    "@types/socket.io-client": "^1.4.33",
     "css-loader": "^3.6.0",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",

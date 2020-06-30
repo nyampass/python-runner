@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react'
 import MonacoEdotor from 'react-monaco-editor'
 import { Button, Grid } from '@material-ui/core'
 import api from '../api'
+import io from 'socket.io-client'
+
+const socket = io('/')
+let logText = ''
 
 export default () => {
   const [mainSrc, setMainSrc] = useState()
@@ -9,10 +13,25 @@ export default () => {
   const [requirementsSrc, setRequirementsSrc] = useState()
   const [requirementsEditor, setRequirementsEditor] = useState<any>()
   const playProgram = async () => {
+    logText = ''
     await api.postMainPy(mainEditor?.getModel().getValue())
     await api.postRequirementsTxt(requirementsEditor?.getModel().getValue())
-    alert(await api.run())
+    await api.run()
   }
+  const [connected, setConnected] = useState(false)
+  const [logCount, setLogCount] = useState(0)
+
+  socket.on('connect', () => {
+    setConnected(true)
+  })
+  socket.on('disconnect', () => {
+    setConnected(false)
+  })
+  socket.on('message', (data: any) => {
+    console.log(data)
+    logText += data
+    setLogCount(logCount + 1)
+  })
 
   useEffect(() => {
     const f = async () => {
@@ -44,9 +63,15 @@ export default () => {
           }}
         />
       </div>
+      <div>
+        {connected ? 'connected' : 'not connected'}
+      </div>
       <Grid container direction="row-reverse" style={{ padding: 10 }}>
         <Button variant="contained" color="primary" onClick={() => playProgram()}>play</Button>
       </Grid>
+      <pre key={logCount}>
+        {logText}
+      </pre>
     </div>
   );
 }

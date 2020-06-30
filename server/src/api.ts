@@ -1,7 +1,7 @@
 import express from 'express'
 import fs from 'fs'
 import path from 'path'
-import { execSync } from 'child_process'
+import processHandler from './processHandler'
 
 const fileDir = './files'
 const mainPath = path.join(fileDir, 'main.py')
@@ -29,21 +29,19 @@ export default express.Router()
   })
   .post('/main.py', (req, res) => {
     saveToFile(mainPath, req.body.body)
-    res.send(200)
+    res.sendStatus(200)
   })
   .get('/requirements.txt', (req, res) => {
     sendFileIfExists(res, requirementsPath)
   })
   .post('/requirements.txt', (req, res) => {
     saveToFile(requirementsPath, req.body.body)
-    res.send(200)
+    res.sendStatus(200)
   })
   .get('/run', (req, res) => {
-    let c
-    c = `pip3 install -r ${__dirname}/../${requirementsPath}`
-    console.log(c)
-    console.log(execSync(c).toString())
-    c = `python3 ${__dirname}/../${mainPath}`
-    console.log(c)
-    res.send(execSync(c).toString())
+    processHandler.resetProcesses([
+      ['pip3', ['install', '-r', `${__dirname}/../${requirementsPath}`]],
+      ['python3', [`${__dirname}/../${mainPath}`]],
+    ])
+    res.sendStatus(200)
   })

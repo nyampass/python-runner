@@ -24,8 +24,9 @@ module.exports = {
   target: 'node',
   node: {
     __dirname: false,
+    __filename: false,
   },
   externals: {
-    "sequelize": "require('sequelize')",
+    // "sequelize": "require('sequelize')",
   },
 }
