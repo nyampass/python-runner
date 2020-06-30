@@ -7,17 +7,32 @@ import io from 'socket.io-client'
 const socket = io('/')
 
 export default () => {
-  const [mainSrc, setMainSrc] = useState()
-  const [mainEditor, setMainEditor] = useState<any>()
-  const [requirementsSrc, setRequirementsSrc] = useState()
-  const [requirementsEditor, setRequirementsEditor] = useState<any>()
-  const playProgram = async () => {
-    await api.postMainPy(mainEditor?.getModel().getValue())
-    await api.postRequirementsTxt(requirementsEditor?.getModel().getValue())
-    await api.run()
-  }
+  const [mainSrc, setMainSrc] = useState('')
+  const [requirementsSrc, setRequirementsSrc] = useState('')
   const [connected, setConnected] = useState(false)
   const [logText, setLogText] = useState('')
+  const [logEditor, setLogEditor] = useState<any>()
+  const playProgram = async () => {
+    await api.postMainPy(mainSrc)
+    await api.postRequirementsTxt(requirementsSrc)
+    await api.run()
+  }
+  const loadSources = async() => {
+    setMainSrc(await api.getMainPy() || '')
+    setRequirementsSrc(await api.getRequitementsTxt() || '')
+  }
+
+  useEffect(() => {
+    const windowHeight = window.innerHeight
+    const middleContainerHeight = document.getElementById('middle-container')?.offsetHeight
+    const topContainerHeight = document.getElementById('top-container')?.offsetHeight
+    const bottomContainer = document.getElementById('bottom-container')
+    if (bottomContainer && middleContainerHeight && topContainerHeight) {
+      bottomContainer.style.height = `${windowHeight - topContainerHeight - middleContainerHeight}px`
+    }
+    logEditor?.layout()
+    loadSources()
+  }, [])
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -40,21 +55,6 @@ export default () => {
     }
   }, [logText])
 
-  useEffect(() => {
-    const windowHeight = window.innerHeight
-    const middleContainerHeight = document.getElementById('middle-container')?.offsetHeight
-    const topContainerHeight = document.getElementById('top-container')?.offsetHeight
-    const bottomContainer = document.getElementById('bottom-container')
-    if (bottomContainer && middleContainerHeight && topContainerHeight) {
-      bottomContainer.style.height = `${windowHeight - topContainerHeight - middleContainerHeight}px`
-    }
-    const f = async () => {
-      setMainSrc(await api.getMainPy() || '')
-      setRequirementsSrc(await api.getRequitementsTxt() || '')
-    }
-    f()
-  }, [])
-
   return (
     <div className="Home" style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <div id="top-container" style={{ width: '100%', height: '70%', flexFlow: 'row', display: 'flex' }}>
@@ -63,9 +63,7 @@ export default () => {
           height='100%'
           language='python'
           value={mainSrc}
-          editorDidMount={(editor, monaco) => {
-            setMainEditor(editor)
-          }}
+          onChange={(t: string) => setMainSrc(t)}
           options={{
             automaticLayout: true,
           }}
@@ -75,9 +73,7 @@ export default () => {
           height='100%'
           language='python'
           value={requirementsSrc}
-          editorDidMount={(editor, monaco) => {
-            setRequirementsEditor(editor)
-          }}
+          onChange={(t: string) => setRequirementsSrc(t)}
           options={{
             automaticLayout: true,
           }}
@@ -110,6 +106,9 @@ export default () => {
           options={{
             readOnly: true,
             automaticLayout: true,
+          }}
+          editorDidMount={(editor, monaco) => {
+            setLogEditor(editor)
           }}
         />
       </Box>
