@@ -3,15 +3,33 @@ import MonacoEdotor from 'react-monaco-editor'
 import { Box, Button, Grid } from '@material-ui/core'
 import api from '../api'
 import io from 'socket.io-client'
+import monaco from 'monaco-editor'
 
 const socket = io('/')
+
+const editorLineHeight = 20
+const calcScrollTopToShowTail = (editor: monaco.editor.ICodeEditor, areaHeight: number) => {
+  const scrollHeight = editor.getScrollHeight()
+  const tailTop = scrollHeight - areaHeight * 2 + editorLineHeight
+  return tailTop
+}
+const detectShowingTail = (editor: monaco.editor.ICodeEditor, areaHeight: number) => {
+  const tailTop = calcScrollTopToShowTail(editor, areaHeight)
+  const top = editor.getScrollTop()
+  return top >= tailTop
+}
+const scrollToShowTail = (editor: monaco.editor.ICodeEditor, areaHeight: number) => {
+  const tailTop = calcScrollTopToShowTail(editor, areaHeight)
+  editor.setScrollTop(tailTop)
+}
 
 export default () => {
   const [mainSrc, setMainSrc] = useState('')
   const [requirementsSrc, setRequirementsSrc] = useState('')
   const [connected, setConnected] = useState(false)
   const [logText, setLogText] = useState('')
-  const [logEditor, setLogEditor] = useState<any>()
+  const [logEditor, setLogEditor] = useState<monaco.editor.ICodeEditor>()
+  const [logAreaHeight, setLogAreaHeight] = useState(0)
   const playProgram = async () => {
     await api.postMainPy(mainSrc)
     await api.postRequirementsTxt(requirementsSrc)
@@ -28,7 +46,9 @@ export default () => {
     const topContainerHeight = document.getElementById('top-container')?.offsetHeight
     const bottomContainer = document.getElementById('bottom-container')
     if (bottomContainer && middleContainerHeight && topContainerHeight) {
-      bottomContainer.style.height = `${windowHeight - topContainerHeight - middleContainerHeight}px`
+      const h = windowHeight - topContainerHeight - middleContainerHeight
+      bottomContainer.style.height = `${h}px`
+      setLogAreaHeight(h)
     }
     logEditor?.layout()
     loadSources()
@@ -48,12 +68,16 @@ export default () => {
   }, [connected])
   useEffect(() => {
     socket.on('message', (data: any) => {
+      const isShowingTail = logEditor && detectShowingTail(logEditor, logAreaHeight)
       setLogText(logText + data)
+      if (logEditor && isShowingTail) {
+        scrollToShowTail(logEditor, logAreaHeight)
+      }
     })
     return () => {
       socket.removeListener('message')
     }
-  }, [logText])
+  }, [logText, logEditor])
 
   return (
     <div className="Home" style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
