@@ -33,7 +33,6 @@ export default () => {
   }, [connected])
   useEffect(() => {
     socket.on('message', (data: any) => {
-      console.log(data)
       setLogText(logText + data)
     })
     return () => {
@@ -44,9 +43,8 @@ export default () => {
   useEffect(() => {
     const windowHeight = window.innerHeight
     const middleContainerHeight = document.getElementById('middle-container')?.offsetHeight
-    const topContainerHeight =  document.getElementById('top-container')?.offsetHeight
-    const bottomContainer =  document.getElementById('bottom-container')
-    console.log(bottomContainer, middleContainerHeight, topContainerHeight)
+    const topContainerHeight = document.getElementById('top-container')?.offsetHeight
+    const bottomContainer = document.getElementById('bottom-container')
     if (bottomContainer && middleContainerHeight && topContainerHeight) {
       bottomContainer.style.height = `${windowHeight - topContainerHeight - middleContainerHeight}px`
     }
@@ -61,7 +59,7 @@ export default () => {
     <div className="Home" style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <div id="top-container" style={{ width: '100%', height: '70%', flexFlow: 'row', display: 'flex' }}>
         <MonacoEdotor
-          width='50%'
+          width='60%'
           height='100%'
           language='python'
           value={mainSrc}
@@ -73,7 +71,7 @@ export default () => {
           }}
         />
         <MonacoEdotor
-          width='50%'
+          width='40%'
           height='100%'
           language='python'
           value={requirementsSrc}
