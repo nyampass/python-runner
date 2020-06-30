@@ -45,6 +45,18 @@ export default () => {
     setMainSrc(await api.getMainPy() || '')
     setRequirementsSrc(await api.getRequitementsTxt() || '')
   }
+  const handleKeyDown = (e: KeyboardEvent) => {
+    const c = String.fromCharCode(e.which).toLowerCase()
+    if (e.ctrlKey && c === 's') {
+      saveProgram()
+      e.preventDefault()
+      return false
+    } else if (e.ctrlKey && c === 'e') {
+      playProgram()
+      e.preventDefault()
+      return false
+    }
+  }
 
   useEffect(() => {
     const windowHeight = window.innerHeight
@@ -58,6 +70,10 @@ export default () => {
     }
     logEditor?.layout()
     loadSources()
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [])
 
   useEffect(() => {
@@ -72,6 +88,7 @@ export default () => {
       socket.removeListener('disconnect')
     }
   }, [connected])
+
   useEffect(() => {
     socket.on('message', (data: any) => {
       const isShowingTail = logEditor && detectShowingTail(logEditor, logAreaHeight)
