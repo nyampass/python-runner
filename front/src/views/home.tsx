@@ -45,7 +45,7 @@ export default () => {
         />
       </div>
       <Grid container direction="row-reverse" style={{ padding: 10 }}>
-        <Button variant="contained" color="primary" onChange={() => playProgram()}>play</Button>
+        <Button variant="contained" color="primary" onClick={() => playProgram()}>play</Button>
       </Grid>
     </div>
   );
