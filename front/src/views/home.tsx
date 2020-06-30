@@ -103,9 +103,18 @@ export default () => {
           </Box>
         </Grid>
       </Grid>
-      <pre id="bottom-container" style={{ overflow: 'scroll', background: 'lightgray' }}>
-        {logText}
-      </pre>
+      <Box id="bottom-container">
+        <MonacoEdotor
+          width='100%'
+          height='100%'
+          language='none'
+          value={logText}
+          options={{
+            readOnly: true,
+            automaticLayout: true,
+          }}
+        />
+      </Box>
     </div>
   );
 }
