@@ -30,12 +30,18 @@ export default () => {
   const [logText, setLogText] = useState('')
   const [logEditor, setLogEditor] = useState<monaco.editor.ICodeEditor>()
   const [logAreaHeight, setLogAreaHeight] = useState(0)
-  const playProgram = async () => {
+  const saveProgram = async () => {
     await api.postMainPy(mainSrc)
     await api.postRequirementsTxt(requirementsSrc)
+  }
+  const playProgram = async () => {
+    await saveProgram()
     await api.run()
   }
-  const loadSources = async() => {
+  const stopProgram = async () => {
+    await api.stop()
+  }
+  const loadSources = async () => {
     setMainSrc(await api.getMainPy() || '')
     setRequirementsSrc(await api.getRequitementsTxt() || '')
   }
@@ -104,22 +110,23 @@ export default () => {
         />
       </div>
       <Grid container id="middle-container" justify='flex-end'>
-        <Grid item>
-          <Box p={1}>
-            <Button
-              variant="contained" color="default"
-              onClick={() => setLogText('')}
-            >
-              Clear log
-            </Button>
-            <Button
-              variant="contained" color="primary"
-              onClick={() => playProgram()}
-            >
-              play
-          </Button>
-          </Box>
-        </Grid>
+        {[
+          { title: 'stop', action: () => stopProgram() },
+          { title: 'clear log', action: () => setLogText('') },
+          { title: 'save', action: () => saveProgram() },
+          { title: 'play', color: 'primary', action: () => playProgram() },
+        ].map((v, i) => (
+          <Grid key={i} item>
+            <Box p={1} pl={0}>
+              <Button
+                variant="contained" color={v.color as any}
+                onClick={v.action}
+              >
+                {v.title}
+              </Button>
+            </Box>
+          </Grid>
+        ))}
       </Grid>
       <Box id="bottom-container">
         <MonacoEdotor

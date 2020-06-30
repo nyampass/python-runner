@@ -16,7 +16,9 @@ export default {
     await axios({ url: '/api/requirements.txt', method: 'post', data: { body } })
   },
   run: async () => {
-    const res = await axios({ url: '/api/run' })
-    return res.data
-  }
+    await axios({ url: '/api/run' })
+  },
+  stop: async () => {
+    await axios({ url: '/api/stop' })
+  },
 }

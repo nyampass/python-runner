@@ -45,3 +45,6 @@ export default express.Router()
     ])
     res.sendStatus(200)
   })
+  .get('/stop', (req, res) => {
+    processHandler.resetProcesses([])
+  })
