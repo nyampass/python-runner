@@ -7,8 +7,6 @@ pythonのプログラムの編集と実行を行うプログラムです。
 ```
 docker-compose run front yarn
 docker-compose run server yarn
-docker-compose run server apk add python3
-docker-compose run server pip3 install --upgrade pip
 ```
 
 ## Development

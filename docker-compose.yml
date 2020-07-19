@@ -10,7 +10,8 @@ services:
       - ./front:/app
     command: yarn dev
   server:
-    <<: *node
+    build:
+      context: ./server
     working_dir: /server
     volumes:
       - ./server:/server
